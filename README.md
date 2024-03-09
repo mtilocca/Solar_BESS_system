@@ -35,7 +35,7 @@ The BESS initially accumulates energy until it reaches its capacity, after which
 
 Energy is released to the grid once the demand starts to exceed the solar production. The release of energy is higher when there is no solar production to meet the grid demand.
 
-![Energy Production, Storage, and Release](<Screenshot 2024-03-09 at 12.06.56.png>)
+![Energy Production, Storage, and Release](<results.png>)
 
 (Note: Replace "path/to/image.png" with the actual path to the image in your repository)
 
