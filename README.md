@@ -37,7 +37,7 @@ Energy is released to the grid once the demand starts to exceed the solar produc
 
 ![Energy Production, Storage, and Release](<results.png>)
 
-(Note: Replace "path/to/image.png" with the actual path to the image in your repository)
+----
 
 ## Docker Container
 
