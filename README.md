@@ -39,9 +39,31 @@ Energy is released to the grid once the demand starts to exceed the solar produc
 
 (Note: Replace "path/to/image.png" with the actual path to the image in your repository)
 
-## Discussion
+## Docker Container
 
-Discuss any interesting findings, potential improvements, or real-world implications of your simulation results here.
+The simulation has been containerized with Docker to ensure it runs smoothly in any environment. Below are the steps to use the Docker container for this project.
+
+### Pull the Docker Image
+
+To pull the pre-built Docker image from Docker Hub, run the following command:
+
+```bash
+docker pull mtilocca/solar-bess:v1.0.0
+```
+
+### Running the Container 
+
+You can either run the app by directly running in your terminal 
+
+```bash 
+docker run --rm -it mtilocca/solar-bess:v1.0.0
+```
+
+or alternatively you can use the **docker compose file** in the repo by typing in the terminal: 
+
+```bash 
+docker-compose up -d 
+```
 
 ## Future Work
 
