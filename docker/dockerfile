@@ -1,0 +1,23 @@
+# Use an official Python runtime as a parent image, based on Alpine, compatible with ARM architecture
+FROM python:3.10-alpine
+
+# Set the working directory in the container
+WORKDIR /home
+
+# Copy the Python dependencies file to the container
+COPY /src /home/src
+COPY /utils /home/utils
+
+
+# Install build dependencies, and any needed packages specified in requirements.txt
+# Then remove the build dependencies to keep the image small
+RUN apk add --no-cache --virtual .build-deps \
+        gcc \
+        musl-dev \
+        linux-headers \
+    && apk del .build-deps
+
+
+
+# Run Modbus_server.py when the container launches
+CMD ["python", "/home/src/main.py"]
