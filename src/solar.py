@@ -1,6 +1,24 @@
 import pvlib
 from pvlib import location, irradiance, atmosphere, pvsystem, temperature
 import pandas as pd
+import logging
+import colorlog
+
+# Configure colorlog
+handler = colorlog.StreamHandler()
+handler.setFormatter(colorlog.ColoredFormatter(
+    '%(log_color)s%(levelname)s: %(message)s',
+    log_colors={
+        'DEBUG': 'blue',
+        'INFO': 'green',
+        'WARNING': 'yellow',
+        'ERROR': 'red',
+        'CRITICAL': 'bold_red',
+    }
+))
+logger = colorlog.getLogger()
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 
 class SolarPanelSimulation:
     def __init__(self, latitude, longitude, altitude, surface_tilt, surface_azimuth):
@@ -17,7 +35,7 @@ class SolarPanelSimulation:
         self.location = location.Location(latitude, longitude, altitude=altitude)
         self.surface_tilt = surface_tilt
         self.surface_azimuth = surface_azimuth
-        self.times = pd.date_range(start='2024-01-01 00:00:00', end='2024-12-31 23:59:59', freq='h', tz='Australia/Perth')
+        self.times = pd.date_range(start='2024-01-01 00:00:00', end='2024-01-01 23:59:59', freq='h', tz='Australia/Perth')
 
         # Example system parameters for a generic crystalline silicon module
         self.pv_system = pvsystem.retrieve_sam('SandiaMod')['Canadian_Solar_CS5P_220M___2009_']
@@ -25,21 +43,19 @@ class SolarPanelSimulation:
 
     def simulate(self):
         """
-        Simulate the PV system's power output over a year.
+        Simulate the PV system's power output over a day.
         """
         # Get solar position for the given times
         solar_position = self.location.get_solarposition(self.times)
         
-        # Debugging: Print solar position sample
-        print("Solar Position Sample:")
-        print(solar_position.head())
+        # Logging: Solar position sample
+        logger.debug("Solar Position Sample:\n%s", solar_position.loc['2024-01-01 10:00:00+08:00':'2024-01-01 14:00:00+08:00'])
 
         # Get clear sky data
         clearsky = self.location.get_clearsky(self.times)
 
-        # Debugging: Print clear sky irradiance sample
-        print("Clear Sky Irradiance Sample:")
-        print(clearsky.head())
+        # Logging: Clear sky irradiance sample
+        logger.debug("Clear Sky Irradiance Sample:\n%s", clearsky.loc['2024-01-01 10:00:00+08:00':'2024-01-01 14:00:00+08:00'])
 
         # Calculate POA (plane of array) irradiance
         poa_irradiance = irradiance.get_total_irradiance(
@@ -52,9 +68,8 @@ class SolarPanelSimulation:
             solar_azimuth=solar_position['azimuth']
         )
 
-        # Print intermediate POA irradiance values for debugging
-        print("POA Irradiance Sample:")
-        print(poa_irradiance.head())
+        # Logging: POA irradiance sample
+        logger.debug("POA Irradiance Sample:\n%s", poa_irradiance.loc['2024-01-01 10:00:00+08:00':'2024-01-01 14:00:00+08:00'])
 
         # Calculate cell and module temperature
         temp_cell = temperature.sapm_cell(
@@ -64,32 +79,40 @@ class SolarPanelSimulation:
             **self.temp_model_params
         )
 
-        # Print intermediate temperature values for debugging
-        print("Cell Temperature Sample:")
-        print(temp_cell.head())
+        # Logging: Cell temperature sample
+        logger.debug("Cell Temperature Sample:\n%s", temp_cell.loc['2024-01-01 10:00:00+08:00':'2024-01-01 14:00:00+08:00'])
 
         # Calculate absolute airmass
         airmass_absolute = pvlib.atmosphere.get_absolute_airmass(solar_position['apparent_zenith'])
+
+        # Calculate the angle of incidence (AOI)
+        aoi = irradiance.aoi(
+            self.surface_tilt,
+            self.surface_azimuth,
+            solar_position['apparent_zenith'],
+            solar_position['azimuth']
+        )
+
+        # Logging: AOI sample
+        logger.debug("AOI Sample:\n%s", aoi.loc['2024-01-01 10:00:00+08:00':'2024-01-01 14:00:00+08:00'])
 
         # Calculate the effective irradiance
         effective_irradiance = pvsystem.sapm_effective_irradiance(
             poa_direct=poa_irradiance['poa_direct'],
             poa_diffuse=poa_irradiance['poa_diffuse'],
             airmass_absolute=airmass_absolute,
-            aoi=solar_position['apparent_zenith'],
+            aoi=aoi,
             module=self.pv_system
         )
 
-        # Print intermediate effective irradiance values for debugging
-        print("Effective Irradiance Sample:")
-        print(effective_irradiance.head())
+        # Logging: Effective irradiance sample
+        logger.debug("Effective Irradiance Sample:\n%s", effective_irradiance.loc['2024-01-01 10:00:00+08:00':'2024-01-01 14:00:00+08:00'])
 
         # Calculate the DC power output using the SAPM
         power_dc = pvsystem.sapm(effective_irradiance, temp_cell, self.pv_system)
 
-        # Print intermediate power output values for debugging
-        print("DC Power Output Sample:")
-        print(power_dc['p_mp'].head())
+        # Logging: DC power output sample
+        logger.debug("DC Power Output Sample:\n%s", power_dc['p_mp'].loc['2024-01-01 10:00:00+08:00':'2024-01-01 14:00:00+08:00'])
 
         power_output_df = pd.DataFrame({
             'Timestamp': self.times,
@@ -109,4 +132,4 @@ simulation = SolarPanelSimulation(
 power_output_df = simulation.simulate()
 
 # To see output around noon, you can do something like:
-print(power_output_df.between_time('10:00', '16:00').head())
+logger.info("Power Output Sample:\n%s", power_output_df.between_time('10:00', '16:00').head())
