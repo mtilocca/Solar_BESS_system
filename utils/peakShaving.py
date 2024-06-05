@@ -77,11 +77,11 @@ class PeakShavingAlgorithm:
         """
         return self.shave_peaks()
 
-# Example usage:
-consumption_data = [100, 150, 200, 300, 250, 180, 130]
-peak_threshold = 200
-time_intervals = [1, 2, 3, 4, 5, 6, 7]
+# # Example usage:
+# consumption_data = [100, 150, 200, 300, 250, 180, 130]
+# peak_threshold = 200
+# time_intervals = [1, 2, 3, 4, 5, 6, 7]
 
-algorithm = PeakShavingAlgorithm(consumption_data, peak_threshold, time_intervals)
-adjusted_data = algorithm.export_data()
-print(adjusted_data)
+# algorithm = PeakShavingAlgorithm(consumption_data, peak_threshold, time_intervals)
+# adjusted_data = algorithm.export_data()
+# print(adjusted_data)

@@ -44,11 +44,11 @@ class mFRR:
 
         return load_shed, reserve_used
 
-# Example usage
-mFRR = mFRR(max_load_reduction=500, storage_capacity=1000, initial_storage_level=500)
-load_forecast = [800, 900, 1000, 1100]  # Forecasted load in kW for 4 periods
-generation_forecast = [700, 800, 900, 1000]  # Forecasted generation in kW for 4 periods
+# # Example usage
+# mFRR = mFRR(max_load_reduction=500, storage_capacity=1000, initial_storage_level=500)
+# load_forecast = [800, 900, 1000, 1100]  # Forecasted load in kW for 4 periods
+# generation_forecast = [700, 800, 900, 1000]  # Forecasted generation in kW for 4 periods
 
-load_shed, reserve_used = mFRR.decide_action(load_forecast, generation_forecast)
-print(f"Load to shed: {load_shed} kW")
-print(f"Reserve used: {reserve_used} kWh")
+# load_shed, reserve_used = mFRR.decide_action(load_forecast, generation_forecast)
+# print(f"Load to shed: {load_shed} kW")
+# print(f"Reserve used: {reserve_used} kWh")

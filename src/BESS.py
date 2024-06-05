@@ -115,33 +115,33 @@ class LithiumBatteryBESS:
 
 
 
-# Initialize the battery
-battery = LithiumBatteryBESS(nominal_capacity_kWh=10, temperature=25.0)
+# # Initialize the battery
+# battery = LithiumBatteryBESS(nominal_capacity_kWh=10, temperature=25.0)
 
-# Simulate charging in the morning at 0.5C rate
-# Assuming the battery starts at 0% SOC
-print("Morning charging...")
-battery.charge(energy_kWh=5, charge_rate_C=0.5)  # Charge 5 kWh at 0.5C rate
-print(f"State of Charge after charging: {battery.get_state_of_charge()*100:.2f}%")
-print(f"Remaining capacity: {battery.get_remaining_capacity_percent():.2f}%\n")
+# # Simulate charging in the morning at 0.5C rate
+# # Assuming the battery starts at 0% SOC
+# print("Morning charging...")
+# battery.charge(energy_kWh=5, charge_rate_C=0.5)  # Charge 5 kWh at 0.5C rate
+# print(f"State of Charge after charging: {battery.get_state_of_charge()*100:.2f}%")
+# print(f"Remaining capacity: {battery.get_remaining_capacity_percent():.2f}%\n")
 
-# Simulate using the battery to supply energy in the evening at 1C rate
-print("Evening discharging...")
-battery.discharge(energy_kWh=5, discharge_rate_C=1)  # Discharge 5 kWh at 1C rate
-print(f"State of Charge after discharging: {battery.get_state_of_charge()*100:.2f}%")
-print(f"Remaining capacity: {battery.get_remaining_capacity_percent():.2f}%\n")
+# # Simulate using the battery to supply energy in the evening at 1C rate
+# print("Evening discharging...")
+# battery.discharge(energy_kWh=5, discharge_rate_C=1)  # Discharge 5 kWh at 1C rate
+# print(f"State of Charge after discharging: {battery.get_state_of_charge()*100:.2f}%")
+# print(f"Remaining capacity: {battery.get_remaining_capacity_percent():.2f}%\n")
 
-# Simulate a full cycle to account for capacity fade
-battery.cycle(depth=0.5)  # Assuming a depth of discharge (DOD) of 50%
+# # Simulate a full cycle to account for capacity fade
+# battery.cycle(depth=0.5)  # Assuming a depth of discharge (DOD) of 50%
 
-# Check battery status after one cycle
-print("After one cycle:")
-print(f"State of Charge: {battery.get_state_of_charge()*100:.2f}%")
-print(f"Remaining capacity: {battery.get_remaining_capacity_percent():.2f}%\n")
+# # Check battery status after one cycle
+# print("After one cycle:")
+# print(f"State of Charge: {battery.get_state_of_charge()*100:.2f}%")
+# print(f"Remaining capacity: {battery.get_remaining_capacity_percent():.2f}%\n")
 
-# Repeat for more cycles to see the effect of degradation over time
-for i in range(1, 11):  # Simulate 10 more cycles
-    battery.cycle(depth=0.5)
+# # Repeat for more cycles to see the effect of degradation over time
+# for i in range(1, 11):  # Simulate 10 more cycles
+#     battery.cycle(depth=0.5)
 
-print("After 11 total cycles:")
-print(f"Remaining capacity: {battery.get_remaining_capacity_percent():.2f}%")
+# print("After 11 total cycles:")
+# print(f"Remaining capacity: {battery.get_remaining_capacity_percent():.2f}%")
